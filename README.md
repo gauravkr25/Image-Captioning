@@ -53,16 +53,20 @@ These scores reflect the evaluation run performed for this project; results may 
 
 ```text
 Image-Captioning/
-├── app/              # Streamlit application
-├── configs/          # Model and training configurations
-├── data/             # Dataset files (images excluded from Git)
-├── docs/             # Documentation
-├── scripts/          # Utility scripts
-├── src/              # Model, training, and inference code
-├── tests/            # Automated tests
+├── app/
+│   ├── pages/
+│   └── streamlit_app.py
+├── src/
+│   └── models/
+├── tests/
+├── artifacts/          # Generated model files (excluded from Git)
+├── data/               # Dataset files (images excluded from Git)
+├── outputs/            # Generated outputs (excluded from Git)
 ├── .gitignore
 ├── requirements.txt
 └── README.md
+
+*Note: The structure above highlights the main project directories. Actual files inside each directory may vary.*
 ```
 
 ## Installation
