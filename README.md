@@ -1,72 +1,52 @@
 # Image Captioning Using Deep Learning
 
-An AI-powered Image Captioning application that generates natural-language descriptions of images using deep learning and attention mechanisms.
-
-## Overview
-
-This project combines computer vision and natural language processing to generate captions for images. It uses an EfficientNetV2B0 encoder to extract image features and a GRU-based decoder with Bahdanau Attention to generate captions.
-
-The project also includes a Streamlit web application for generating captions and visualizing attention.
+An image captioning application that generates natural-language descriptions of images using **EfficientNetV2B0, GRU, and Bahdanau Attention**. The project includes a Streamlit interface, model training and evaluation scripts, and attention visualization tools.
 
 ## Features
 
-- Automatic image caption generation
-- EfficientNetV2B0 image feature extraction
-- GRU-based decoder with Bahdanau Attention
-- Attention visualization for generated captions
-- Streamlit web interface
-- Model evaluation using BLEU, ROUGE-L, and CIDEr metrics
-- Dataset and vocabulary utilities
-
-## Tech Stack
-
-- **Language:** Python
-- **Deep Learning:** TensorFlow / Keras
-- **Image Encoder:** EfficientNetV2B0
-- **Caption Decoder:** GRU with Bahdanau Attention
-- **Web Interface:** Streamlit
-- **Dataset:** Flickr8k
+- Generate captions for uploaded images.
+- Extract image features using EfficientNetV2B0.
+- Generate text using a GRU-based decoder with Bahdanau Attention.
+- Visualize attention during caption generation.
+- Evaluate captions using BLEU, ROUGE-L, and CIDEr metrics.
+- Explore model comparisons and dataset vocabulary through Streamlit pages.
 
 ## Model Architecture
 
-1. **Image Encoder:** Extracts visual features using EfficientNetV2B0.
-2. **Attention Mechanism:** Helps the decoder focus on relevant image features while generating each word.
-3. **Text Decoder:** Uses a GRU network to generate a caption token by token.
-4. **Output:** Produces a natural-language description of the input image.
-
-## Evaluation
-
-The trained model was evaluated on the Flickr8k test split.
-
-| Metric | Score |
-|---|---:|
-| BLEU-1 | 0.6031 |
-| BLEU-2 | 0.4158 |
-| BLEU-3 | 0.2799 |
-| BLEU-4 | 0.1818 |
-| ROUGE-L | 0.3782 |
-| CIDEr | 0.4514 |
-
-These scores reflect the evaluation run performed for this project; results may vary with model configuration and decoding settings.
+1. **Image Encoder:** EfficientNetV2B0 extracts visual features.
+2. **Attention Mechanism:** Bahdanau Attention helps the decoder focus on relevant image features.
+3. **Text Decoder:** A GRU generates the caption token by token.
+4. **Evaluation:** Generated captions are evaluated using standard captioning metrics.
 
 ## Project Structure
 
 ```text
 Image-Captioning/
 ├── app/
-│   ├── pages/
-│   └── streamlit_app.py
+│   ├── streamlit_app.py
+│   ├── components.py
+│   └── pages/
+│       ├── 1_Caption_Image.py
+│       ├── 2_Attention_Viewer.py
+│       ├── 3_Model_Comparison.py
+│       └── 4_Dataset_and_Vocab.py
+├── scripts/
+│   ├── download_data.py
+│   └── make_samples.py
 ├── src/
-│   └── models/
+│   ├── models/
+│   ├── config.py
+│   ├── dataset.py
+│   ├── decode.py
+│   ├── evaluate.py
+│   ├── features.py
+│   ├── inference.py
+│   ├── text.py
+│   └── train.py
 ├── tests/
-├── artifacts/          # Generated model files (excluded from Git)
-├── data/               # Dataset files (images excluded from Git)
-├── outputs/            # Generated outputs (excluded from Git)
-├── .gitignore
 ├── requirements.txt
+├── .gitignore
 └── README.md
-
-*Note: The structure above highlights the main project directories. Actual files inside each directory may vary.*
 ```
 
 ## Installation
@@ -80,54 +60,110 @@ cd Image-Captioning
 
 ### 2. Create a virtual environment
 
-```bash
-python -m venv .venv
-```
-
-Activate it on Windows PowerShell:
+**Windows:**
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+**Linux/macOS:**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 ### 3. Install dependencies
 
 ```bash
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## Run the Application
+## Dataset and Model Setup
 
-From the project root, run:
+The Flickr8k dataset and trained model artifacts are not included in this repository.
 
-```bash
-$env:PYTHONPATH="."
-streamlit run app/streamlit_app.py --server.fileWatcherType none
+Before running inference, prepare the dataset and model files according to the paths expected by the project configuration.
+
+The trained model directory used in the development environment was:
+
+```text
+artifacts/models/flickr8k_gpu_full/
 ```
 
-Then open `http://localhost:8501` in your browser.
+It contained model weights, a decoder, tokenizer vocabulary, and configuration files. These artifacts are excluded from Git because of their size.
 
-**Note:** Running the application requires the model files, vocabulary, and any required feature artifacts to be available locally. These generated files are excluded from Git, so configure or generate them according to the project scripts and configuration files.
+**Important:** A fresh clone requires the compatible trained artifacts and any required dataset files before all application features can work. The exact download and setup process should be followed from the project's scripts and configuration.
 
-## Dataset
+## Run the Application
 
-This project uses the Flickr8k image-caption dataset. Dataset images are excluded from this repository because of their size and dataset distribution requirements. Obtain the dataset separately and place the required files in the expected project directories.
+From the repository root, run:
+
+```bash
+python -m streamlit run app/streamlit_app.py
+```
+
+If Streamlit is installed but the application cannot import project modules, try:
+
+```bash
+PYTHONPATH=. streamlit run app/streamlit_app.py --server.fileWatcherType none
+```
+
+Open the local URL displayed in the terminal, usually `http://localhost:8501`.
+
+## Evaluation Results
+
+The following results were recorded during development on 809 evaluation images.
+
+| Metric | Score |
+|---|---:|
+| BLEU-1 | 0.6031 |
+| BLEU-2 | 0.4158 |
+| BLEU-3 | 0.2799 |
+| BLEU-4 | 0.1818 |
+| ROUGE-L | 0.3782 |
+| CIDEr | 0.4514 |
+
+Results may vary depending on preprocessing, model checkpoints, decoding settings, and evaluation implementation.
+
+## Testing
+
+Run the test suite from the project root:
+
+```bash
+python -m pytest -q
+```
+
+Tests may require additional dependencies or fixtures, depending on the test configuration.
+
+## Technologies Used
+
+- Python
+- TensorFlow / Keras
+- EfficientNetV2B0
+- GRU
+- Bahdanau Attention
+- Streamlit
+- NumPy
+- Pillow
+- pytest
 
 ## Future Improvements
 
-- Experiment with Transformer-based caption decoders
-- Improve caption quality and evaluation scores
-- Add support for more datasets
-- Optimize inference speed and deployment
+- Improve caption quality through additional training and tuning.
+- Compare greedy decoding with beam search.
+- Improve attention visualization.
+- Simplify model artifact setup for new users.
+- Provide a hosted demo.
 
 ## Author
 
 **Gaurav Kumar**
 
-B.Tech — Computer Science and Engineering
-
-GitHub: [@gauravkr25](https://github.com/gauravkr25)
+GitHub: [gauravkr25](https://github.com/gauravkr25)
 
 ---
 
-*Developed as a deep learning project combining computer vision, natural language processing, and attention mechanisms.*
+*This project was developed for learning and experimentation in computer vision, deep learning, and natural-language generation.*
